@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
+import { UserType } from 'src/types/user.type';
 import { ParamIdDto, PostArticleDto } from './article.dto';
 import { ArticleService } from './article.service';
 
@@ -22,7 +23,7 @@ export class ArticleController {
   @Get()
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  getArticle(@Req() { user }: any) {
+  getArticle(@Req() { user }: { user: UserType }) {
     return this.articleService.getArticle(user._id);
   }
 
@@ -31,7 +32,7 @@ export class ArticleController {
   @ApiBearerAuth()
   postArticle(
     @Body() { title, description }: PostArticleDto,
-    @Req() { user }: any,
+    @Req() { user }: { user: UserType },
   ) {
     return this.articleService.postArticle({ title, description }, user._id);
   }
